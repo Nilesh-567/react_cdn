@@ -2,26 +2,32 @@ import React, { useState } from "react";
 
 const App = () => {
   const [text, setText] = useState("");
-
   const startRecognition = () => {
-    const recognition = new window.SpeechRecognition() || new window.webkitSpeechRecognition();
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Speech Recognition is not supported in this browser. Please use Google Chrome.");
+      return;
+    }
+  
+    const recognition = new SpeechRecognition();
     recognition.lang = "en-US";
-
+  
     recognition.onstart = () => {
       console.log("Voice recognition started. Speak into the microphone.");
     };
-
+  
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       setText(transcript);
     };
-
+  
     recognition.onerror = (event) => {
       console.error("Error occurred in recognition:", event.error);
     };
-
+  
     recognition.start();
   };
+  
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
